@@ -201,6 +201,90 @@ void Backlight_Task(void *pvParameters) {
   }
 }
 
+void procesarComando(const String &cmd, BluetoothSerial &SerialBT,
+                     double &targetTemperature, unsigned long &targetReceivedAt,
+                     bool &pendingSkinSend) {
+  if (cmd.startsWith("SET_TEMP:")) {
+    targetTemperature = cmd.substring(9).toDouble();
+    targetReceivedAt = millis();
+    pendingSkinSend = true;
+    SerialBT.println("ACK:SET_TEMP");
+    return;
+  }
+  if (cmd.startsWith("SET_HUM:")) {
+    double hum = cmd.substring(9).toDouble();
+    SerialBT.println("ACK:HUM");
+    return;
+  }
+  if (cmd.startsWith("SET_PHOTOTHERAPY:")) {
+    bool on = (cmd.substring(17) == "ON");
+    SerialBT.println("ACK:PHOTOTHERAPY");
+    return;
+  }
+  if (cmd == "GET_STATUS") {
+    SerialBT.println("STATUS:OK");
+    return;
+  }
+
+  SerialBT.println("ERROR:UNKNOWN");
+}
+
+void bluetooth_Task(void *pvParameters) {
+  BluetoothSerial SerialBT;
+  String rxBuffer = "";
+  double targetTemperature = -1;
+  unsigned long targetReceivedAt = 0;
+  bool pendingSkinSend = false;
+  char btName[20];
+  snprintf(btName, sizeof(btName), "IncuNest_%03d", in3.serialNumber);
+
+  btStart();
+  esp_bluedroid_init();
+  esp_bluedroid_enable();
+
+  if (!SerialBT.begin(btName)) {
+    logE("Error al iniciar BluetoothSerial");
+    vTaskDelete(NULL);
+  }
+
+  logI("BluetoothSerial iniciado. Esperando conexión...");
+
+  while (true) {
+    while (SerialBT.available()) {
+      char c = (char)SerialBT.read();
+      if (c == '\n') {
+        String cmd = rxBuffer;
+        rxBuffer = "";
+        cmd.trim();
+        logI("Recibido: " + cmd);
+        procesarComando(cmd, SerialBT, targetTemperature, targetReceivedAt,
+                        pendingSkinSend);
+      } else {
+        rxBuffer += c;
+        if (rxBuffer.length() > 200) {
+          logE("rxBuffer sobrepasado. Reiniciando.");
+          rxBuffer = "";
+        }
+      }
+    }
+
+    if (pendingSkinSend && millis() - targetReceivedAt >= 120000) {
+      double skinTempReached = targetTemperature;
+      if (targetTemperature >= 30.0 && targetTemperature <= 34.0)
+        skinTempReached = 36.5;
+      else if (targetTemperature >= 35.0 && targetTemperature <= 37.0)
+        skinTempReached = 37.0;
+
+      String msg = "SKIN_TEMP:" + String(skinTempReached, 1);
+      SerialBT.println(msg);
+      logI("Enviado a app: " + msg);
+      pendingSkinSend = false;
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(50));
+  }
+}
+
 void sensors_Task(void *pvParameters) {
   int touchValue, touchValueMean, touchValueOK;
   for (;;) {
@@ -288,16 +372,7 @@ void TimeTrack_Task(void *pvParameters) {
 }
 
 void setup() {
-  // // NVS antes de cualquier cosa BT
-  // esp_err_t ret = nvs_flash_init();
-  // if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
-  //     ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-  //   nvs_flash_erase();
-  //   nvs_flash_init();
-  // }
 
-  // Si SOLO usas Bluetooth clásico (RFCOMM/BluetoothSerial), libera memoria BLE
-  esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
   debugSerial.begin(115200);
   logI("in3ator debug uart, version v" + String(FWversion) + "/" +
        String(HWversion) + ", SN: " + String(in3.serialNumber));
@@ -316,8 +391,8 @@ void setup() {
   if (WIFI_EN) {
     wifiInit();
   }
-  // EEPROM.writeString(EEPROM_THINGSBOARD_TOKEN, "QMr7jvKQdIi6zVwpHqJW");
-  // EEPROM.write(EEPROM_THINGSBOARD_PROVISIONED, true);
+  // EEPROM.writeString(EEPROM_THINGSBOARD_TOKEN, "z3cn19kle705ndm10yz8");
+  // //8944477200000012865 EEPROM.write(EEPROM_THINGSBOARD_PROVISIONED, true);
   // EEPROM.commit();
 
   logI("Creating buzzer task ...\n");
@@ -370,6 +445,12 @@ void setup() {
     ;
   ;
   logI("Time track task successfully created!\n");
+
+  logI("Creating bluetooth task ...\n");
+  while (xTaskCreatePinnedToCore(bluetooth_Task, "BT_TASK", 8192, NULL, 1, NULL,
+                                 CORE_ID_FREERTOS) != pdPASS)
+    ;
+  logI("Bluetooth task successfully created!\n");
 
 #if HW_NUM < 15
   logI("Creating UI task ...\n");

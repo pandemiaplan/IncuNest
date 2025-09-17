@@ -45,7 +45,6 @@
 #include "BluetoothSerial.h"
 #include "esp_bt.h"
 #include "esp_bt_main.h"
-#include "nvs_flash.h"
 
 // #include <BQ25792_Driver.h>
 
@@ -196,7 +195,6 @@ typedef enum
   HEATER_ISSUE_ALARM,
   POWER_SUPPLY_ALARM,
   NUM_ALARMS,
-  MAX_ALARM_STRING_SIZE = 255,
 } ALARMS_ID;
 
 typedef enum
@@ -377,7 +375,7 @@ typedef enum
 #define EEPROM_HUMIDIFIER_ACTIVE_TIME 246
 #define EEPROM_PANIC_OTA_CHANGE 250
 
-#define SKIN_CALIBRATION_CORRECTION_FACTOR 0
+#define SKIN_CALIBRATION_CORRECTION_FACTOR -0.53
 
 // configuration variables
 #define SWITCH_DEBOUNCE_TIME_MS 30 // encoder debouncing time
@@ -582,7 +580,6 @@ typedef struct
 
   bool alarmsEnabled = true;
   bool alarmToReport[NUM_ALARMS];
-  char alarmMessage[MAX_ALARM_STRING_SIZE];
   bool previousAlarmReport;
 
   float fan_rpm = false;
