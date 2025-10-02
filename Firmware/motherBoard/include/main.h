@@ -29,6 +29,7 @@
 #include "Adafruit_GFX.h"
 #include <TFT_eSPI.h> // Hardware-specific library
 #include "Adafruit_SHT4x.h"
+#include <SensirionI2cSts3x.h>
 #include "Credentials.h"
 #include "ESP32_config.h"
 #include "GPRS.h"
@@ -314,7 +315,7 @@ typedef enum
 #define GPRS_TASK_PERIOD_MS 1
 #define OTA_TASK_PERIOD_MS 1
 #define SENSORS_TASK_PERIOD_MS 1
-#define ROOM_SENSOR_UPDATE_PERIOD_MS 500
+#define ROOM_SENSOR_UPDATE_PERIOD_MS 5000
 #define SKIN_CAPACITANCE_UPDATE_PERIOD_MS 2000
 #define DIGITAL_CURRENT_SENSOR_PERIOD_MS 5
 #define BUZZER_TASK_PERIOD_MS 10
@@ -407,7 +408,27 @@ typedef enum
 #define MAIN_DIGITAL_CURRENT_SENSOR_I2C_ADDRESS 0x41
 #define SECUNDARY_DIGITAL_CURRENT_SENSOR_I2C_ADDRESS 0x40
 #define AMBIENT_SENSOR_I2C_ADDRESS 0x44
-#define ROOM_SENSOR_I2C_ADDRESS 0x70
+
+// calibration menu
+typedef enum
+{
+  ROOM_SENSOR_STS3X_MAIN = 0,
+  ROOM_SENSOR_STS3X_REDUNDANT,
+  ROOM_SENSOR_SHTC3,
+  ROOM_SENSOR_POSIBILITIES,
+} ROOM_SENSORS;
+
+// calibration menu
+typedef enum
+{
+  STS3X_MAIN=0,
+  STS3X_REDUNDANT,
+  STS3X_NUM,
+} STS3X_SENSORS;
+
+#define ROOM_SENSOR_SHTC3_I2C_ADDRESS 0x70
+#define ROOM_SENSOR_STS35_I2C_ADDRESS_MAIN       0x4A
+#define ROOM_SENSOR_STS35_I2C_ADDRESS_REDUNDANT  0x4B
 
 // #define system constants
 #define HUMIDIFIER_DUTY_CYCLE_MAX 95 // maximum humidity cycle in heater to be set
@@ -522,6 +543,7 @@ typedef enum
   12000 // time to decrease backlight display if no user actions
 
 #define INIT_I2C_DELAY 50
+#define INIT_ROOM_SENSOR_STS3X_DELAY 100
 #define INIT_CURRENT_SENSOR_DELAY 50
 #define BACKLIGHT_DELAY 2
 #define INIT_TFT_DELAY 300

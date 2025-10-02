@@ -30,6 +30,7 @@ extern TwoWire *wire;
 extern MAM_in3ator_Humidifier in3_hum;
 extern TFT_eSPI tft;
 extern SHTC3 mySHTC3; // Declare an instance of the SHTC3 class
+extern SensirionI2cSts3x mySTS35[STS3X_NUM];
 extern Adafruit_SHT4x sht4;
 extern RotaryEncoder encoder;
 extern Beastdevices_INA3221 mainDigitalCurrentSensor;
@@ -68,7 +69,7 @@ extern volatile bool statusEncSwitch;
 // WIFI
 extern bool WIFI_connection_status;
 
-extern bool roomSensorPresent;
+extern bool roomSensorPresent[ROOM_SENSOR_POSIBILITIES];
 extern bool ambientSensorPresent;
 extern bool digitalCurrentSensorPresent[2];
 
@@ -162,19 +163,15 @@ extern in3ator_parameters in3;
 long lastCurrentMeasurement, lastVoltageMeasurement;
 long lastEncoderUpdate;
 
-void currentMonitor()
-{
-  if (millis() - lastCurrentMeasurement > CURRENT_UPDATE_PERIOD_MS)
-  {
-    if (digitalCurrentSensorPresent[MAIN])
-    {
+void currentMonitor() {
+  if (millis() - lastCurrentMeasurement > CURRENT_UPDATE_PERIOD_MS) {
+    if (digitalCurrentSensorPresent[MAIN]) {
       in3.system_current = measureMeanConsumption(MAIN, SYSTEM_SHUNT_CHANNEL);
       in3.fan_current = measureMeanConsumption(MAIN, FAN_SHUNT_CHANNEL);
       in3.phototherapy_current =
           measureMeanConsumption(MAIN, PHOTOTHERAPY_SHUNT_CHANNEL);
     }
-    if (digitalCurrentSensorPresent[SECUNDARY])
-    {
+    if (digitalCurrentSensorPresent[SECUNDARY]) {
       in3.heater_current =
           measureMeanConsumption(SECUNDARY, HEATER_SHUNT_CHANNEL);
       in3.USB_current = measureMeanConsumption(SECUNDARY, USB_SHUNT_CHANNEL);
@@ -185,16 +182,12 @@ void currentMonitor()
   }
 }
 
-void voltageMonitor()
-{
-  if (millis() - lastVoltageMeasurement > VOLTAGE_UPDATE_PERIOD_MS)
-  {
-    if (digitalCurrentSensorPresent[MAIN])
-    {
+void voltageMonitor() {
+  if (millis() - lastVoltageMeasurement > VOLTAGE_UPDATE_PERIOD_MS) {
+    if (digitalCurrentSensorPresent[MAIN]) {
       in3.system_voltage = measureMeanVoltage(MAIN, SYSTEM_SHUNT_CHANNEL);
     }
-    if (digitalCurrentSensorPresent[SECUNDARY])
-    {
+    if (digitalCurrentSensorPresent[SECUNDARY]) {
       in3.USB_voltage = measureMeanVoltage(SECUNDARY, USB_SHUNT_CHANNEL);
       in3.BATTERY_voltage =
           measureMeanVoltage(SECUNDARY, BATTERY_SHUNT_CHANNEL);
@@ -203,20 +196,16 @@ void voltageMonitor()
   }
 }
 
-double measureMeanConsumption(bool sensor, int shunt)
-{
+double measureMeanConsumption(bool sensor, int shunt) {
 #if (HW_NUM >= 6 && HW_NUM <= 8)
-  for (int i = 0; i < CURRENT_MEASURES_AMOUNT; i++)
-  {
+  for (int i = 0; i < CURRENT_MEASURES_AMOUNT; i++) {
     in3.system_current = filter_2(analogReadMilliVolts(SYSTEM_CURRENT_SENSOR) *
                                   ANALOG_TO_AMP_FACTOR);
   }
   return (in3.system_current);
 #else
-  if (digitalCurrentSensorPresent[sensor])
-  {
-    if (sensor == SECUNDARY)
-    {
+  if (digitalCurrentSensorPresent[sensor]) {
+    if (sensor == SECUNDARY) {
       return (secundaryDigitalCurrentSensor.getCurrent(
           ina3221_ch_t(shunt))); // Amperes
     }
@@ -227,12 +216,9 @@ double measureMeanConsumption(bool sensor, int shunt)
   return (false);
 }
 
-float measureMeanVoltage(bool sensor, int shunt)
-{
-  if (digitalCurrentSensorPresent[sensor])
-  {
-    if (sensor)
-    {
+float measureMeanVoltage(bool sensor, int shunt) {
+  if (digitalCurrentSensorPresent[sensor]) {
+    if (sensor) {
       return (secundaryDigitalCurrentSensor.getVoltage(
           ina3221_ch_t(shunt))); // Volts
     }
@@ -241,8 +227,7 @@ float measureMeanVoltage(bool sensor, int shunt)
   return (false);
 }
 
-float adcToCelsius(float adcReading)
-{
+float adcToCelsius(float adcReading) {
   // Valores fijos del circuito
   float rAux = 10000.0;
   float vcc = 3.3;
@@ -254,68 +239,52 @@ float adcToCelsius(float adcReading)
   // Variables used in calculus
   float vm = 0.0;
   float rntc = 0.0;
-  if (adcReading)
-  {
-    if (ADC_READ_FUNCTION == MILLIVOTSREAD_ADC)
-    {
+  if (adcReading) {
+    if (ADC_READ_FUNCTION == MILLIVOTSREAD_ADC) {
       rntc = rAux / ((vcc / (adcReading / 1000)) -
                      1); // Calcular la resistencia de la NTC
-    }
-    else if (ADC_READ_FUNCTION == ANALOGREAD_ADC)
-    {
+    } else if (ADC_READ_FUNCTION == ANALOGREAD_ADC) {
       vm = (vcc) *
            ((adcReading) / maxADCvalue); // Calcular tensión en la entrada
       rntc = rAux / ((vcc / vm) - 1);
     }
-  }
-  else
-  {
+  } else {
     return false;
   }
   return (beta / (log(rntc / r0) + (beta / temp0)) -
           273.15); // Calcular la temperatura en Celsius
 }
 
-void fanSpeedHandler()
-{
+void fanSpeedHandler() {
   double fanEncoderPeriodFiltered;
-  if (in3.fanEncoderUpdate)
-  {
+  if (in3.fanEncoderUpdate) {
     in3.fanEncoderUpdate = false;
     lastEncoderUpdate = millis();
     fanEncoderPeriodFiltered =
         filter_0(in3.fanEncoderPeriod[1] - in3.fanEncoderPeriod[0]);
-    if (fanEncoderPeriodFiltered)
-    {
+    if (fanEncoderPeriodFiltered) {
       in3.fan_rpm = FAN_RPM_CONVERSION / fanEncoderPeriodFiltered;
     }
-  }
-  else if (millis() - lastEncoderUpdate > FAN_UPDATE_TIME_MIN)
-  {
+  } else if (millis() - lastEncoderUpdate > FAN_UPDATE_TIME_MIN) {
     in3.fan_rpm = false;
   }
 }
 
-bool measureNTCTemperature()
-{
+bool measureNTCTemperature() {
   int NTCmeasurement;
-  if (ADC_READ_FUNCTION == MILLIVOTSREAD_ADC)
-  {
+  if (ADC_READ_FUNCTION == MILLIVOTSREAD_ADC) {
     NTCmeasurement = analogReadMilliVolts(BABY_NTC_PIN);
-  }
-  else if (ADC_READ_FUNCTION == ANALOGREAD_ADC)
-  {
+  } else if (ADC_READ_FUNCTION == ANALOGREAD_ADC) {
     NTCmeasurement = analogRead(BABY_NTC_PIN);
   }
   if (NTCmeasurement > ADC_TO_DISCARD_MIN &&
-      NTCmeasurement < ADC_TO_DISCARD_MAX)
-  {
+      NTCmeasurement < ADC_TO_DISCARD_MAX) {
     lastSuccesfullSensorUpdate[SKIN_SENSOR] = millis();
-    //        xQueueSend(sharedSensorQueue, &lastSuccesfullSensorUpdate[SKIN_SENSOR], portMAX_DELAY);
+    //        xQueueSend(sharedSensorQueue,
+    //        &lastSuccesfullSensorUpdate[SKIN_SENSOR], portMAX_DELAY);
     in3.temperature[SKIN_SENSOR] = filter_1(adcToCelsius(NTCmeasurement));
     errorTemperature[SKIN_SENSOR] = in3.temperature[SKIN_SENSOR];
-    if (RawTemperatureRange[SKIN_SENSOR])
-    {
+    if (RawTemperatureRange[SKIN_SENSOR]) {
       in3.temperature[SKIN_SENSOR] =
           (((in3.temperature[SKIN_SENSOR] - RawTemperatureLow[SKIN_SENSOR]) *
             ReferenceTemperatureRange) /
@@ -324,60 +293,124 @@ bool measureNTCTemperature()
     }
     in3.temperature[SKIN_SENSOR] += fineTuneSkinTemperature;
     errorTemperature[SKIN_SENSOR] -= in3.temperature[SKIN_SENSOR];
-    if (in3.temperature < 0)
-    {
+    if (in3.temperature < 0) {
       in3.temperature[SKIN_SENSOR] = 0;
     }
     return true;
-  }
-  else
-  {
+  } else {
     // logAlarm("[ALARM] -> NTC read is: " + String(NTCmeasurement));
     return false;
   }
   return false;
 }
 
-bool updateRoomSensor()
-{
-  if (roomSensorPresent)
-  {
-    SHTC3_Status_TypeDef sensorState = mySHTC3.update();
-    float sensedTemperature;
-    // logI("[SENSORS] -> Updating room humidity: state is " +
-    // String(sensorState));
-    if (!sensorState)
-    {
-      sensedTemperature = mySHTC3.toDegC();
-      if (sensedTemperature > DIG_TEMP_TO_DISCARD_MIN &&
-          sensedTemperature < DIG_TEMP_TO_DISCARD_MAX)
-      {
-        lastSuccesfullSensorUpdate[ROOM_DIGITAL_TEMP_SENSOR] = millis();
-        //        xQueueSend(sharedSensorQueue, &lastSuccesfullSensorUpdate[ROOM_DIGITAL_TEMP_SENSOR], portMAX_DELAY);
-        in3.temperature[ROOM_DIGITAL_TEMP_SENSOR] =
-            sensedTemperature; // Add here measurement to temp array
-        in3.humidity[ROOM_DIGITAL_HUM_SENSOR] = mySHTC3.toPercent();
-        return true;
+bool updateRoomSensor() {
+  static char errorMessage[64];
+  SHTC3_Status_TypeDef shtc3_sensor_status;
+
+  // Acumuladores/flags para STS3X
+  bool sts_main_ok = false;
+  bool sts_red_ok = false;
+  float sts_main_T = 0.0f;
+  float sts_red_T = 0.0f;
+  bool saw_sts_red =
+      false; // Sabremos si pasamos por el REDUNDANT en este ciclo
+
+  for (int i = 0; i < ROOM_SENSOR_POSIBILITIES; i++) {
+    if (!roomSensorPresent[i])
+      continue;
+
+    switch (i) {
+    case ROOM_SENSOR_STS3X_MAIN: {
+      float aTemperature = 0.0f;
+      uint16_t err =
+          mySTS35[i].measureSingleShot(REPEATABILITY_HIGH, false, aTemperature);
+      if (err != NO_ERROR) {
+        errorToString(err, errorMessage, sizeof(errorMessage));
+        logI(String("Error in measureSingleShot() STS3X_MAIN: ") +
+             String(errorMessage));
+        break;
       }
+      if (aTemperature > DIG_TEMP_TO_DISCARD_MIN &&
+          aTemperature < DIG_TEMP_TO_DISCARD_MAX) {
+        sts_main_ok = true;
+        sts_main_T = aTemperature;
+        logI(String("STS35[MAIN] OK: ") + String(aTemperature, 2) + " °C");
+      } else {
+        logI(String("STS35[MAIN] out of range: ") + String(aTemperature, 2) +
+             " °C");
+      }
+      break;
     }
+    case ROOM_SENSOR_STS3X_REDUNDANT: {
+      float aTemperature = 0.0f;
+      uint16_t err =
+          mySTS35[i].measureSingleShot(REPEATABILITY_HIGH, false, aTemperature);
+      saw_sts_red = true;
+      if (err != NO_ERROR) {
+        errorToString(err, errorMessage, sizeof(errorMessage));
+        logI(String("Error in measureSingleShot() STS3X_REDUNDANT: ") +
+             String(errorMessage));
+        break;
+      }
+      if (aTemperature > DIG_TEMP_TO_DISCARD_MIN &&
+          aTemperature < DIG_TEMP_TO_DISCARD_MAX) {
+        sts_red_ok = true;
+        sts_red_T = aTemperature;
+        logI(String("STS35[RED] OK: ") + String(aTemperature, 2) + " °C");
+      } else {
+        logI(String("STS35[RED] out of range: ") + String(aTemperature, 2) +
+             " °C");
+      }
+      break;
+    }
+
+    case ROOM_SENSOR_SHTC3: {
+      shtc3_sensor_status = mySHTC3.update();
+      if (!shtc3_sensor_status) {
+        float sensedTemperature = mySHTC3.toDegC();
+        if (sensedTemperature > DIG_TEMP_TO_DISCARD_MIN &&
+            sensedTemperature < DIG_TEMP_TO_DISCARD_MAX) {
+          lastSuccesfullSensorUpdate[ROOM_DIGITAL_TEMP_SENSOR] = millis();
+          in3.temperature[ROOM_DIGITAL_TEMP_SENSOR] = sensedTemperature;
+          in3.humidity[ROOM_DIGITAL_HUM_SENSOR] = mySHTC3.toPercent();
+          logI(String("SHTC3 OK: ") + String(sensedTemperature, 2) + " °C, " +
+               String(in3.humidity[ROOM_DIGITAL_HUM_SENSOR], 2) + " %RH");
+        }
+      }
+      break;
+    }
+    default:
+      break;
+    }
+  }
+
+  // Confirmamos éxito con STS3X solo cuando:
+  // - ya pasamos por el REDUNDANT
+  // - y ambas lecturas son válidas
+  if (saw_sts_red && sts_main_ok && sts_red_ok) {
+    float avgT = (sts_main_T + sts_red_T) * 0.5f;
+    lastSuccesfullSensorUpdate[ROOM_DIGITAL_TEMP_SENSOR] = millis();
+    in3.temperature[ROOM_DIGITAL_TEMP_SENSOR] = avgT;
+    return true;
+  }
+
+  if (!shtc3_sensor_status) {
+    return true;
   }
   initRoomSensor();
   return false;
 }
 
-bool updateAmbientSensor()
-{
-  if (ambientSensorPresent)
-  {
+bool updateAmbientSensor() {
+  if (ambientSensorPresent) {
     sensors_event_t humidity, temp;
     sht4.getEvent(&humidity,
                   &temp); // populate temp and humidity objects with fresh data
     in3.temperature[AMBIENT_DIGITAL_TEMP_SENSOR] = temp.temperature;
     in3.humidity[AMBIENT_DIGITAL_HUM_SENSOR] = humidity.relative_humidity;
     return true;
-  }
-  else
-  {
+  } else {
     initAmbientSensor();
   }
   return false;

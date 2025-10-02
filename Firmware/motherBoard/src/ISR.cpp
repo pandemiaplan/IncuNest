@@ -30,7 +30,6 @@
 extern TwoWire *wire;
 extern MAM_in3ator_Humidifier in3_hum;
 extern TFT_eSPI tft;
-extern SHTC3 mySHTC3; // Declare an instance of the SHTC3 class
 extern RotaryEncoder encoder;
 
 extern bool WIFI_EN;
@@ -64,8 +63,6 @@ extern volatile bool statusEncSwitch;
 
 // WIFI
 extern bool WIFI_connection_status;
-
-extern bool roomSensorPresent;
 
 // room variables
 extern double desiredControlTemperature; // preset baby skin temperature
