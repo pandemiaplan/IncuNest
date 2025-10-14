@@ -1,0 +1,2 @@
+Record=DiagramHierarchy|SourceDocument=MultiBoardSchematic1.MbsDoc|Kind=Multi-board Schematic Module|Designator=Motherboard|Source=..\Motherboard\in3ator.PrjPcb
+Record=SubProject|SourceDocument=MultiBoardSchematic1.MbsDoc|ProjectPath=..\Motherboard\in3ator.PrjPcb

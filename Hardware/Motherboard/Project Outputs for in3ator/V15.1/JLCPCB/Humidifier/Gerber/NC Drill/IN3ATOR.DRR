@@ -1,0 +1,21 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: IN3ATOR.PcbDoc   20/05/2023  12:51:58
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : IN3ATOR-RoundHoles.TXT
+ASCII SlotHoles File : IN3ATOR-SlotHoles.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      12mil (0.3mm)                                             Round             25        PTH        3.30inch (83.84mm)
+T2      28mil (0.7mm)                                             Slot              4         PTH        1.49inch (37.97mm)
+T3      30mil (0.762mm)                                           Round             3         PTH        0.16inch (4.06mm)
+T4      39mil (1mm)                                               Round             2         PTH        0.08inch (2.00mm)
+T5      40mil (1.02mm)                                            Round             8         PTH        0.95inch (24.01mm)
+T6      126mil (3.2mm)                                            Round             2         PTH        0.67inch (16.90mm)
+T7      28mil (0.7mm)                                             Round             2         NPTH       0.23inch (5.78mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              46
+
+Total Processing Time (hh:mm:ss) : 00:00:00

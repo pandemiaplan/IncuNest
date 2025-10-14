@@ -1,0 +1,10 @@
+Output: Bill of Materials
+Type  : BOM
+From  : Variant [Main] of Project [Arcaboard.PrjPcb]
+   Generated File[Bill of Materials-Arcaboard(Main).xlsx]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 15:27:04 On 05/12/2024

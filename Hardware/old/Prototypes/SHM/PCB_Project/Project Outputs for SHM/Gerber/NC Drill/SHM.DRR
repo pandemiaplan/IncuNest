@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: SHM.PcbDoc   02/10/2024  14:48:26
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : SHM-RoundHoles.TXT
+ASCII SlotHoles File : SHM-SlotHoles.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      8mil (0.2mm)                                              Round             12        PTH        0.43inch (11.00mm)
+T2      12mil (0.3mm)                                             Round             684       PTH        97.99inch (2489.00mm)
+T3      28mil (0.7mm)                                             Slot              4         PTH        1.49inch (37.97mm)
+T4      35mil (0.9mm)                                             Round             26        PTH        5.12inch (130.04mm)
+T5      43mil (1.1mm)                                             Round             10        PTH        0.90inch (22.86mm)
+T6      55mil (1.4mm)                                             Round             4         PTH        1.16inch (29.56mm)
+T7      126mil (3.2mm)                                            Round             3         PTH        3.68inch (93.35mm)
+T8      28mil (0.7mm)                                             Round             2         NPTH       0.23inch (5.78mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              745
+
+Total Processing Time (hh:mm:ss) : 00:00:00

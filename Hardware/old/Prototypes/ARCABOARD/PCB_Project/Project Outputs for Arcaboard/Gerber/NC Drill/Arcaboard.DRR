@@ -1,0 +1,24 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: Arcaboard.PcbDoc   05/12/2024  15:27:01
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : Arcaboard.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      8mil (0.2mm)                                              Round             28        PTH        4.33inch (110.05mm)
+T2      12mil (0.3mm)                                             Round             539       PTH        87.20inch (2214.91mm)
+T3      20mil (0.5mm)                                             Round             7         PTH        2.50inch (63.51mm)
+T4      35mil (0.89mm)                                            Round             8         PTH        0.71inch (18.08mm)
+T5      36mil (0.914mm)                                           Round             2         PTH        0.26inch (6.50mm)
+T6      39mil (1mm)                                               Round             14        PTH        3.44inch (87.31mm)
+T7      40mil (1.02mm)                                            Round             4         PTH        0.52inch (13.25mm)
+T8      55mil (1.4mm)                                             Round             4         PTH        1.03inch (26.14mm)
+T9      64mil (1.63mm)                                            Round             2         PTH        0.61inch (15.49mm)
+T10     126mil (3.2mm)                                            Round             3         PTH        7.60inch (193.00mm)
+T11     128mil (3.25mm)                                           Round             2         NPTH       0.45inch (11.43mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              613
+
+Total Processing Time (hh:mm:ss) : 00:00:00

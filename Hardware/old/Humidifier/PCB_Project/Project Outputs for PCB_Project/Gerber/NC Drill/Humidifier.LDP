@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Users\Administrator\Documents\in3ator_altium\Humidifier\PCB\Humidifier.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=humidifier-roundholes.txt|DrillLayers=gtl,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=humidifier-slotholes.txt|DrillLayers=gtl,gbl

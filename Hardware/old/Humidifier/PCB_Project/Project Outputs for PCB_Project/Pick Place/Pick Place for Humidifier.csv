@@ -1,0 +1,36 @@
+Altium Designer Pick and Place Locations
+C:\Users\Administrator\Documents\in3ator_altium\Humidifier\PCB_Project\Project Outputs for PCB_Project\Pick Place\Pick Place for Humidifier.csv
+
+========================================================================================================================
+File Design Information:
+
+Date:       08/04/24
+Time:       22:40
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+"Designator","Center-X(mm)","Center-Y(mm)","Layer","Rotation"
+"C2","81.4116","76.1870","TopLayer","0"
+"C3","55.6797","77.5160","TopLayer","90"
+"C21","66.7665","94.7831","TopLayer","90"
+"C22","58.6006","82.0290","TopLayer","180"
+"C27","55.6797","80.3780","TopLayer","270"
+"D3","85.1437","77.7110","TopLayer","90"
+"D9","64.3157","90.5220","TopLayer","270"
+"J7","75.4195","85.7841","TopLayer","315"
+"J10","58.1026","94.3480","TopLayer","270"
+"J11","69.1417","89.6490","TopLayer","0"
+"L1","67.0397","80.4946","TopLayer","180"
+"LED1","62.9286","97.5230","TopLayer","0"
+"Q11","69.3187","84.8230","TopLayer","0"
+"R24","61.9597","79.7476","TopLayer","270"
+"R26","63.8632","85.4010","TopLayer","0"
+"R47","65.5956","97.5230","TopLayer","180"
+"R48","63.8407","86.7280","TopLayer","0"
+"R54","63.8632","88.0680","TopLayer","0"
+"R64","66.5817","84.9396","TopLayer","270"
+"U12","58.4736","78.9811","TopLayer","0"
+"U13","58.4737","86.9820","TopLayer","90"
+"U14","64.1501","94.8805","TopLayer","270"
+"USB2","84.3116","72.1126","TopLayer","0"
