@@ -64,3 +64,63 @@ Firmware/motherBoard/.vscode/c_cpp_properties.json
 .vscode/
 
 >>>>>>> 801c88c1bb7803d20439ede9c30c64ede3420dd5
+build/
+**/.pio/
+*.bin
+*.elf
+*.hex
+Hardware/**/.svn/
+build/
+**/.pio/
+*.bin
+*.elf
+*.hex
+Hardware/**/.svn/
+build/
+**/.pio/
+**/.vscode/
+*.log
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+*.obj
+*.d
+**/preproc/
+**/includes.cache
+Hardware/**/.svn/
+build/
+**/.pio/
+**/.vscode/
+*.log
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+*.obj
+*.d
+**/preproc/
+**/includes.cache
+Hardware/**/.svn/
+# PlatformIO / Arduino / builds
+**/.pio/
+**/.vscode/
+build/
+**/build/
+**/preproc/
+**/includes.cache
+*.log
+*.map
+*.o
+*.obj
+*.d
+# binarios que no quieras versionar
+*.bin
+*.elf
+*.hex
+# restos antiguos
+Firmware/old/humidifier/build/
+Firmware/old/humidifier/preproc/
+Hardware/**/.svn/

@@ -1,3 +1,23 @@
+* text=auto eol=lf
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.ino text eol=lf
+*.py text eol=lf
+*.ini text eol=lf
+*.csv text eol=lf
+*.md  text eol=lf
+# binarios/imagenes
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.bin binary
+*.elf binary
+*.hex binary
+*.zip binary
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
