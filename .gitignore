@@ -125,3 +125,6 @@ Firmware/old/humidifier/build/
 Firmware/old/humidifier/preproc/
 Hardware/**/.svn/
 /NUL
+
+# Ignore heavy hardware history folders
+Hardware/**/[Hh]istory/
