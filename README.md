@@ -22,16 +22,26 @@ To date, more than **200 incubators have been installed across 30 countries**, s
 
 IncuNest/
 ├── Firmware/ # Firmware source code (ESP32, Arduino framework)
+
 │ ├── Display_HMI/
+
 │ ├── motherboard/
+
 │ ├── old # Legacy
+
 │
 ├── Hardware/ # CAD, schematics, and PCB design files
+
 │ ├── Electronics/
+
 │ ├── Mechanical/
+
 │
+
 ├── LICENSE # Open license (non-commercial use allowed)
+
 ├── README.md # This document
+
 └── .gitignore # Excludes heavy folders (e.g., Hardware/**/History)
 
 In order to use wifi or thingsboard functionality, you can add your configuration in "Credentials.h" file located in ´Firmware/motherBoard/include´
