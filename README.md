@@ -113,6 +113,4 @@ Volunteers, partner companies, and educational centers (*Salesianos*, *IED*, *Ay
 
 ---
 
-> *“A baby with jaundice may look calm, but without phototherapy within 48 hours,  
-> irreversible brain damage can occur.  
-> In3ator exists to make sure that light is turned on in time.”*
+> *"So that the place where a premature baby is born does not limit their chances of survival.”*
