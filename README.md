@@ -21,6 +21,7 @@ To date, more than **200 incubators have been installed across 30 countries**, s
 ## 🧩 Repository Structure
 
 IncuNest/
+
 ├── Firmware/ # Firmware source code (ESP32, Arduino framework)
 
 │ ├── Display_HMI/
@@ -29,14 +30,11 @@ IncuNest/
 
 │ ├── old # Legacy
 
-│
 ├── Hardware/ # CAD, schematics, and PCB design files
 
 │ ├── Electronics/
 
 │ ├── Mechanical/
-
-│
 
 ├── LICENSE # Open license (non-commercial use allowed)
 
