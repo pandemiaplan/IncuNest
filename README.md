@@ -42,13 +42,16 @@ IncuNest/
 
 └── .gitignore # Excludes heavy folders (e.g., Hardware/**/History)
 
-In order to use wifi or thingsboard functionality, you can add your configuration in "Credentials.h" file located in ´Firmware/motherBoard/include´
+### 🔐 WiFi and ThingsBoard Configuration
 
-As an example:
-#ifndef _CREDENTIALS_
-#define _CREDENTIALS_
+To enable WiFi or ThingsBoard functionality, create or edit the file  
+`Firmware/motherBoard/include/Credentials.h` and add your configuration as follows:
 
-#define THINGSBOARD_SERVER "your url to thingsboard"
+```cpp
+#ifndef CREDENTIALS
+#define CREDENTIALS
+
+#define THINGSBOARD_SERVER "your_url_to_thingsboard"
 #define THINGSBOARD_PORT 1883
 
 #define FACTORY_SERVER 0
@@ -56,17 +59,20 @@ As an example:
 
 #define THINGSBOARD_PROVISION_SERVER FACTORY_SERVER
 
-#if(THINGSBOARD_PROVISION_SERVER == DEMO_SERVER)
-#define PROVISION_DEVICE_KEY "yourProvisionKey"
-#define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
+#if (THINGSBOARD_PROVISION_SERVER == DEMO_SERVER)
+    #define PROVISION_DEVICE_KEY "yourProvisionKey"
+    #define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
 #elif (THINGSBOARD_PROVISION_SERVER == FACTORY_SERVER)
-#define PROVISION_DEVICE_KEY "yourProvisionKey"
-#define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
+    #define PROVISION_DEVICE_KEY "yourProvisionKey"
+    #define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
 #endif
 
 #define ssid "yourwifissid"
 #define wifiPassword "yourwifipassword"
-#endif // _CREDENTIALS_
+
+#endif // CREDENTIALS
+
+
 
 ---
 
