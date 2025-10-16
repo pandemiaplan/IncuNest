@@ -72,7 +72,7 @@ To enable WiFi or ThingsBoard functionality, create or edit the file
 
 #endif // CREDENTIALS
 
-
+```
 
 ---
 
