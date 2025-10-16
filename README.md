@@ -44,6 +44,30 @@ IncuNest/
 
 In order to use wifi or thingsboard functionality, you can add your configuration in "Credentials.h" file located in ´Firmware/motherBoard/include´
 
+As an example:
+#ifndef _CREDENTIALS_
+#define _CREDENTIALS_
+
+#define THINGSBOARD_SERVER "your url to thingsboard"
+#define THINGSBOARD_PORT 1883
+
+#define FACTORY_SERVER 0
+#define DEMO_SERVER 1
+
+#define THINGSBOARD_PROVISION_SERVER FACTORY_SERVER
+
+#if(THINGSBOARD_PROVISION_SERVER == DEMO_SERVER)
+#define PROVISION_DEVICE_KEY "yourProvisionKey"
+#define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
+#elif (THINGSBOARD_PROVISION_SERVER == FACTORY_SERVER)
+#define PROVISION_DEVICE_KEY "yourProvisionKey"
+#define PROVISION_DEVICE_SECRET "yourProvisionKeySecret"
+#endif
+
+#define ssid "yourwifissid"
+#define wifiPassword "yourwifipassword"
+#endif // _CREDENTIALS_
+
 ---
 
 ## ⚙️ Setup and Installation
