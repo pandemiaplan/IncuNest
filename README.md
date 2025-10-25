@@ -20,27 +20,36 @@ To date, more than **200 incubators have been installed across 30 countries**, s
 
 ## 🧩 Repository Structure
 
+```
 IncuNest/
-
-├── Firmware/ # Firmware source code (ESP32, Arduino framework)
-
-│ ├── Display_HMI/
-
-│ ├── motherboard/
-
-│ ├── old # Legacy
-
-├── Hardware/ # CAD, schematics, and PCB design files
-
-│ ├── Electronics/
-
-│ ├── Mechanical/
-
-├── LICENSE # Open license (non-commercial use allowed)
-
-├── README.md # This document
-
-└── .gitignore # Excludes heavy folders (e.g., Hardware/**/History)
+├── Firmware/                    # Firmware source code (ESP32, PlatformIO)
+│   ├── Display_HMI/            # Display/HMI firmware
+│   │   ├── src/                # Source code
+│   │   ├── include/            # Header files
+│   │   ├── lib/                # Libraries
+│   │   ├── SquareLineProject/  # UI project files
+│   │   ├── platformio.ini      # PlatformIO configuration
+│   │   └── README.md           # Display HMI documentation
+│   ├── motherBoard/            # Main motherboard firmware
+│   │   ├── src/                # Source code
+│   │   ├── include/            # Header files (Credentials.h)
+│   │   ├── lib/                # Libraries
+│   │   ├── platformio.ini      # PlatformIO configuration
+│   │   └── ESP32_OTA_*.csv     # OTA partition tables
+│   └── old/                    # Legacy firmware versions
+│
+├── Hardware/                    # Hardware design files
+│   ├── Electronics/            # Electronic design files
+│   │   ├── Motherboard/        # Main board schematics & PCB
+│   │   ├── Ambient_sensor/     # Room sensor PCB design
+│   │   ├── FullLEDStrip/       # LED strip controller PCB
+│   │   └── old/                # Legacy designs
+│   └── Mechanical/             # 3D CAD files (STEP format)
+│
+├── .gitignore                   # Git ignore rules
+├── LICENSE                      # Open-source license
+└── README.md                    # This document
+```
 
 ### 🔐 WiFi and ThingsBoard Configuration
 
