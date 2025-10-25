@@ -22,7 +22,7 @@ To date, more than **200 incubators have been installed across 30 countries**, s
 
 ```
 IncuNest/
-├── Firmware/                    # Firmware source code (ESP32, PlatformIO)
+├── Firmware/                   # Firmware source code (ESP32, Arduino framework, PlatformIO)
 │   ├── Display_HMI/            # Display/HMI firmware
 │   │   ├── src/                # Source code
 │   │   ├── include/            # Header files
@@ -38,7 +38,7 @@ IncuNest/
 │   │   └── ESP32_OTA_*.csv     # OTA partition tables
 │   └── old/                    # Legacy firmware versions
 │
-├── Hardware/                    # Hardware design files
+├── Hardware/                   # CAD, schematics, and PCB design files
 │   ├── Electronics/            # Electronic design files
 │   │   ├── Motherboard/        # Main board schematics & PCB
 │   │   ├── Ambient_sensor/     # Room sensor PCB design
@@ -46,8 +46,8 @@ IncuNest/
 │   │   └── old/                # Legacy designs
 │   └── Mechanical/             # 3D CAD files (STEP format)
 │
-├── .gitignore                   # Git ignore rules
-├── LICENSE                      # Open-source license
+├── .gitignore                   # Git ignore rules. Excludes heavy folders (e.g., Hardware/**/History)
+├── LICENSE                      # Open-source license (non-commercial use allowed)
 └── README.md                    # This document
 ```
 
