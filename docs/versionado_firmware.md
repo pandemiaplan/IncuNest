@@ -96,7 +96,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: firmware-hmi
-          path: Firmware/Display_HMI/.pio/build/**/firmware.bin
+          # Ajusta el nombre de entorno si difiere; esto evita capturar múltiples bins.
+          path: Firmware/Display_HMI/.pio/build/default/firmware.bin
 ```
 
 Puntos clave:
