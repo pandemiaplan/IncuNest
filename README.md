@@ -51,6 +51,8 @@ IncuNest/
 └── README.md                    # This document
 ```
 
+📘 Consulta `docs/versionado_firmware.md` para el flujo de versionado y releases de firmware.
+
 ### 🔐 WiFi and ThingsBoard Configuration
 
 To enable WiFi or ThingsBoard functionality, create or edit the file  
