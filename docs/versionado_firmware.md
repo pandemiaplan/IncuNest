@@ -43,6 +43,67 @@ Ambos deben compartir el mismo esquema de versión y quedar enlazados en la mism
    - Verifica que el valor de `FWversion` visible en monitor serie y en los envíos ThingsBoard coincida con el tag publicado.  
    - Si el HMI muestra la versión en pantalla, comprueba que coincide con la release.
 
+### Ejemplo de flujo con GitHub Actions (build + assets en tags)
+
+Agrega un workflow (ej. `.github/workflows/build-firmware.yml`) que compile ambos firmwares cuando se cree un tag `v*` y suba los binarios como artefactos; estos se pueden anexar manualmente a la release o con otro job:
+
+```yaml
+name: Build firmware
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-motherboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build motherBoard
+        working-directory: Firmware/motherBoard
+        run: pio run -e in3ator_UP_TO_V14
+      - name: Upload motherboard bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-motherboard
+          path: Firmware/motherBoard/.pio/build/in3ator_UP_TO_V14/firmware.bin
+
+  build-hmi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build HMI
+        working-directory: Firmware/Display_HMI
+        run: pio run
+      - name: Upload HMI bin
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-hmi
+          path: Firmware/Display_HMI/.pio/build/**/firmware.bin
+```
+
+Puntos clave:
+- Se dispara solo con tags `v*` (emparejado con el formato SemVer usado en código).
+- Cada job sube su binario como artefacto; puedes anexarlos a la release asociada al tag.
+- Si usas particiones personalizadas, incluye la CSV en los artefactos o en la release.
+
 ## Buenas prácticas
 
 - Un único origen de verdad: no edites binarios a mano después de actualizar `FWversion`.
