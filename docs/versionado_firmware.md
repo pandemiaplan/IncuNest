@@ -105,6 +105,50 @@ Puntos clave:
 - Cada job sube su binario como artefacto; puedes anexarlos a la release asociada al tag.
 - Si usas particiones personalizadas, incluye la CSV en los artefactos o en la release.
 
+## Paso a paso: ejemplo práctico
+
+1) **Crear rama de trabajo**  
+   - Crea una rama descriptiva, ej.: `release/v14.12.2`.  
+   - Objetivo: ajustar `FWversion` (placa) y la versión equivalente en el HMI, más cualquier fix asociado.
+
+2) **Actualizar versiones en código**  
+   - Edita `Firmware/motherBoard/include/board.h` → `#define FWversion "14.12.2"`.  
+   - Ajusta la versión en el HMI si aplica (mismos números para la incubadora A).
+
+3) **Ejecutar pruebas automáticas y build local**  
+   - Desde `Firmware/motherBoard`: `pio run -e in3ator_UP_TO_V14`.  
+   - Desde `Firmware/Display_HMI`: `pio run` (o el entorno que uses).  
+   - Opcional: correr linters/tests existentes; verifica logs de CI si el repo tiene Actions configuradas.
+
+4) **Validación manual rápida**  
+   - Revisa `firmware.bin` generado y, si es posible, carga en un banco de pruebas o simulador.  
+   - Verifica que el monitor serie muestre la versión correcta (coherente con `FWversion`/tag).
+
+5) **Crear tag anotado**  
+   - En el commit que contiene los bumps de versión:  
+     ```bash
+     git tag -a v14.12.2 -m "motherBoard + HMI v14.12.2 (HW 14A)"
+     git push origin v14.12.2
+     ```
+
+6) **Generar release en GitHub**  
+   - Usa el tag `v14.12.2`.  
+   - Adjunta artefactos de ambos firmwares:  
+     - `Firmware/motherBoard/.pio/build/in3ator_UP_TO_V14/firmware.bin`  
+     - `Firmware/Display_HMI/.pio/build/default/firmware.bin` (ajusta si usas otro entorno)  
+     - Tabla de particiones `ESP32_OTA_partition_16MB.csv` si aplica.  
+   - Nota de la release: alcance, hardware soportado, qué binarios cambiaron, hashes opcionales.
+
+7) **Verificar publicación**  
+   - Confirma que la release muestra los dos binarios y el tag correcto.  
+   - Si usas OTA/telemetría, valida que `FWversion` reportado coincide con la release publicada.
+
+## Política de ramas, main y releases
+
+- **main**: rama estable; debe contener solo código ya validado y listo para producción. Los tags `v*` se crean siempre sobre commits presentes en `main` para que las releases se basen en el estado estable.
+- **Ramas de trabajo**: usa `feature/` para desarrollo y `release/` para preparar una versión (ej.: `release/v14.12.2`). Los bumps de versión y artefactos de build se validan aquí antes de fusionar a `main`.
+- **Releases y almacenamiento**: el tag `vMAJOR.MINOR.PATCH` se publica en `main` y enlaza una GitHub Release donde se adjuntan los binarios (placa + HMI) y, opcionalmente, la tabla de particiones. Los artefactos generados por Actions en builds de tag sirven como origen reproducible para esas descargas.
+
 ## Buenas prácticas
 
 - Un único origen de verdad: no edites binarios a mano después de actualizar `FWversion`.
